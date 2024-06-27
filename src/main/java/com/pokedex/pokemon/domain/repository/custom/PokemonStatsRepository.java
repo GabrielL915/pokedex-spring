@@ -1,7 +1,7 @@
-package com.pokedex.pokemon.dataSource.repository.custom;
+package com.pokedex.pokemon.domain.repository.custom;
 
-import com.pokedex.pokemon.dataSource.repository.CRUDRepository;
 import com.pokedex.pokemon.domain.entities.PokemonStats;
+import com.pokedex.pokemon.domain.repository.CRUDRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository

@@ -41,4 +41,11 @@ public class PokemonMoves {
 
     @Column(name = "fourthMove")
     private String fourthMove;
+
+    public PokemonMoves(String firstMove, String secondMove, String thirdMove, String fourthMove) {
+        this.firstMove = firstMove;
+        this.secondMove = secondMove;
+        this.thirdMove = thirdMove;
+        this.fourthMove = fourthMove;
+    }
 }

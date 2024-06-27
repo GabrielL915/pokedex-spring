@@ -1,4 +1,4 @@
-package com.pokedex.pokemon.dataSource.repository;
+package com.pokedex.pokemon.domain.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.repository.NoRepositoryBean;

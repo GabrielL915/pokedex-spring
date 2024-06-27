@@ -54,4 +54,15 @@ public class Pokemon {
     @OneToOne
     @JoinColumn(name = "stats_id", referencedColumnName = "id")
     private PokemonStats stats;
+
+    public Pokemon(Long pokedexNumber, String name, String type, Double height, Double weight, PokemonMoves moves, PokemonStats stats) {
+        this.pokedexNumber = pokedexNumber;
+        this.name = name;
+        this.type = type;
+        this.height = height;
+        this.weight = weight;
+        this.moves = moves;
+        this.stats = stats;
+
+    }
 }

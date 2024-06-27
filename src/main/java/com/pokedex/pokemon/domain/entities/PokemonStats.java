@@ -35,4 +35,9 @@ public class PokemonStats {
 
     @Column(name = "value", nullable = false)
     private Double value;
+
+    public PokemonStats(String name, double value) {
+        this.name = name;
+        this.value = value;
+    }
 }

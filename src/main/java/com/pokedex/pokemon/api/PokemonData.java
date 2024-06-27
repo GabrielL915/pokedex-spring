@@ -9,6 +9,7 @@ import org.springframework.web.client.RestTemplate;
 @Service
 @RequiredArgsConstructor
 public class PokemonData {
+
     @Autowired
     private RestTemplate restTemplate;
 

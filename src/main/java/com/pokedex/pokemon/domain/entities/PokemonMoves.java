@@ -30,22 +30,11 @@ public class PokemonMoves {
     @Column(name = "id", nullable = false)
     private String id;
 
-    @Column(name = "firstMove")
-    private String firstMove;
+    @Column(name = "move")
+    private String move;
 
-    @Column(name = "secondMove")
-    private String secondMove;
+    public PokemonMoves(String move) {
+        this.move = move;
 
-    @Column(name = "thirdMove")
-    private String thirdMove;
-
-    @Column(name = "fourthMove")
-    private String fourthMove;
-
-    public PokemonMoves(String firstMove, String secondMove, String thirdMove, String fourthMove) {
-        this.firstMove = firstMove;
-        this.secondMove = secondMove;
-        this.thirdMove = thirdMove;
-        this.fourthMove = fourthMove;
     }
 }

@@ -44,21 +44,22 @@ public class PokemonData {
 
         List<PokemonStats> pokemonStats = getStatsList(rootNode);
 
-        List<String> pokMoves = getMoves(rootNode);
+        List<PokemonMoves> pokemonMoves = getMoves(rootNode);
 
         return new Pokemon(pokedexNumber, name, type, height, weight,
-                new PokemonMoves(pokMoves.get(0), pokMoves.get(1), pokMoves.get(2), pokMoves.get(3)),
-                new PokemonStats());
+                pokemonMoves,
+                pokemonStats);
     }
 
-    private List<String> getMoves(JsonNode rootNode) {
-        List<String> allMoves = new ArrayList<>();
+    private List<PokemonMoves> getMoves(JsonNode rootNode) {
+        List<PokemonMoves> allMoves = new ArrayList<>();
 
         JsonNode movesNode = rootNode.path("moves");
 
         movesNode.forEach(moveNode -> {
-            String moveName = moveNode.path("move").path("name").asText();
-            allMoves.add(moveName);
+            String move = moveNode.path("move").path("name").asText();
+            PokemonMoves pokemonMoves = new PokemonMoves(move);
+            allMoves.add(pokemonMoves);
         });
 
         Collections.shuffle(allMoves);
@@ -67,10 +68,16 @@ public class PokemonData {
     }
 
     private List<PokemonStats> getStatsList(JsonNode rootNode) {
-        return StreamSupport.stream(rootNode.path("stats").spliterator(), false)
-                .map(node -> new PokemonStats(node.path("stat").path("name").asText(),
-                        node.path("base_stat").asDouble()))
-                .toList();
+        List<PokemonStats> statsList = new ArrayList<>();
+        JsonNode statsNode = rootNode.path("stats");
+
+        statsNode.forEach(statNode -> {
+            String name = statNode.path("stat").path("name").asText();
+            double baseStat = statNode.path("base_stat").asDouble();
+            PokemonStats pokemonStats = new PokemonStats(name, baseStat);
+            statsList.add(pokemonStats);
+        });
+        return statsList;
     }
 
     private String getType(JsonNode rootNode) {

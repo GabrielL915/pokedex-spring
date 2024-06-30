@@ -1,7 +1,8 @@
 package com.pokedex.pokemon.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.pokedex.pokemon.api.PokemonData;
-import com.pokedex.pokemon.domain.service.PokemonService;
+import com.pokedex.pokemon.domain.entities.Pokemon;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,7 +20,7 @@ public class PokemonController {
     private PokemonData pokemonDataService;
 
     @GetMapping
-    public ResponseEntity<String> getPokemonData() {
+    public ResponseEntity<Pokemon> getPokemonData() throws JsonProcessingException {
         return ResponseEntity.ok(pokemonDataService.getData());
     }
 

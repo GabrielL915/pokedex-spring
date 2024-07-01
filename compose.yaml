@@ -1,6 +1,7 @@
 services:
   postgres:
     image: 'postgres:alpine'
+    container_name: postgres
     environment:
       - 'POSTGRES_DB=mydatabase'
       - 'POSTGRES_PASSWORD=secret'

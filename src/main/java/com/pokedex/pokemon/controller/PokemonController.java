@@ -22,7 +22,7 @@ public class PokemonController {
     private PokemonData pokemonDataService;
 
     @GetMapping
-    public ResponseEntity<List<Pokemon>> getPokemonData() throws JsonProcessingException {
+    public ResponseEntity<List<Pokemon>> getPokemonData() throws JsonProcessingException, InterruptedException {
         return ResponseEntity.ok(pokemonDataService.fetchPokemonData());
     }
 

@@ -6,6 +6,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pokedex.pokemon.domain.entities.Pokemon;
 import com.pokedex.pokemon.domain.entities.PokemonMoves;
 import com.pokedex.pokemon.domain.entities.PokemonStats;
+import com.pokedex.pokemon.domain.repository.custom.PokemonMovesRepository;
+import com.pokedex.pokemon.domain.repository.custom.PokemonRepository;
+import com.pokedex.pokemon.domain.repository.custom.PokemonStatsRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +18,11 @@ import org.springframework.web.client.RestTemplate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -25,20 +33,41 @@ public class PokemonData {
     @Autowired
     private RestTemplate restTemplate;
 
-    public List<Pokemon> fetchPokemonData() throws JsonProcessingException {
+    @Autowired
+    private PokemonMovesRepository pokemonMovesRepository;
+
+    @Autowired
+    private PokemonStatsRepository pokemonStatsRepository;
+
+    @Autowired
+    private PokemonRepository pokemonRepository;
+
+    private final ExecutorService executorService = Executors.newFixedThreadPool(10);
+
+    public List<Pokemon> fetchPokemonData() throws JsonProcessingException, InterruptedException {
         String url = "https://pokeapi.co/api/v2/pokemon?limit=151";
         JsonNode rootNode = getJsonNode(url);
         JsonNode resultsNode = rootNode.path("results");
 
-        List<Pokemon> pokemons = new ArrayList<>();
+        List<Callable<Pokemon>> pokemons = new ArrayList<>();
 
         for (JsonNode pokemonNode : resultsNode) {
             String pokemonUrl = pokemonNode.path("url").asText();
-            Pokemon pokemon = fetchPokemonDetails(pokemonUrl);
-            pokemons.add(pokemon);
+            pokemons.add(() -> fetchPokemonDetails(pokemonUrl));
         }
+        List<Future<Pokemon>> futures = executorService.invokeAll(pokemons);
 
-        return pokemons;
+        return futures.stream()
+                .map(this::getPokemonFromFuture)
+                .toList();
+    }
+
+    private Pokemon getPokemonFromFuture(Future<Pokemon> future) {
+        try {
+            return future.get();
+        } catch (InterruptedException | ExecutionException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private Pokemon fetchPokemonDetails(String url) throws JsonProcessingException {
@@ -54,10 +83,16 @@ public class PokemonData {
 
         List<PokemonStats> pokemonStats = getStatsList(rootNode);
         List<PokemonMoves> pokemonMoves = getMoves(rootNode);
-
-        return new Pokemon(pokedexNumber, name, type, height, weight,
+        Pokemon pokemon = new Pokemon(pokedexNumber, name, type, height, weight,
                 pokemonMoves,
                 pokemonStats);
+
+        pokemonMovesRepository.saveAll(pokemonMoves);
+
+        pokemonStatsRepository.saveAll(pokemonStats);
+
+        return pokemonRepository.save(pokemon);
+
     }
 
     private JsonNode getJsonNode(String url) throws JsonProcessingException {

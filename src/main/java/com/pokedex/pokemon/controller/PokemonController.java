@@ -8,6 +8,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @RestController
 public class PokemonController {
 
@@ -20,8 +22,8 @@ public class PokemonController {
     private PokemonData pokemonDataService;
 
     @GetMapping
-    public ResponseEntity<Pokemon> getPokemonData() throws JsonProcessingException {
-        return ResponseEntity.ok(pokemonDataService.getData());
+    public ResponseEntity<List<Pokemon>> getPokemonData() throws JsonProcessingException {
+        return ResponseEntity.ok(pokemonDataService.fetchPokemonData());
     }
 
     // - post

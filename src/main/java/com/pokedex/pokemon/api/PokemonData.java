@@ -25,16 +25,26 @@ public class PokemonData {
     @Autowired
     private RestTemplate restTemplate;
 
-    public Pokemon getData() throws JsonProcessingException {
-        String url = "https://pokeapi.co/api/v2/pokemon/1/";
-        ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
-        String responseBody = response.getBody();
+    public List<Pokemon> fetchPokemonData() throws JsonProcessingException {
+        String url = "https://pokeapi.co/api/v2/pokemon?limit=151";
+        JsonNode rootNode = getJsonNode(url);
+        JsonNode resultsNode = rootNode.path("results");
 
-        ObjectMapper objectMapper = new ObjectMapper();
-        JsonNode rootNode = objectMapper.readTree(responseBody);
+        List<Pokemon> pokemons = new ArrayList<>();
+
+        for (JsonNode pokemonNode : resultsNode) {
+            String pokemonUrl = pokemonNode.path("url").asText();
+            Pokemon pokemon = fetchPokemonDetails(pokemonUrl);
+            pokemons.add(pokemon);
+        }
+
+        return pokemons;
+    }
+
+    private Pokemon fetchPokemonDetails(String url) throws JsonProcessingException {
+        JsonNode rootNode = getJsonNode(url);
 
         String name = rootNode.path("name").asText();
-
         Long pokedexNumber = rootNode.path("id").asLong();
 
         String type = getType(rootNode);
@@ -43,12 +53,19 @@ public class PokemonData {
         Double weight = rootNode.path("weight").asDouble();
 
         List<PokemonStats> pokemonStats = getStatsList(rootNode);
-
         List<PokemonMoves> pokemonMoves = getMoves(rootNode);
 
         return new Pokemon(pokedexNumber, name, type, height, weight,
                 pokemonMoves,
                 pokemonStats);
+    }
+
+    private JsonNode getJsonNode(String url) throws JsonProcessingException {
+        ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
+        String responseBody = response.getBody();
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        return objectMapper.readTree(responseBody);
     }
 
     private List<PokemonMoves> getMoves(JsonNode rootNode) {
@@ -77,6 +94,7 @@ public class PokemonData {
             PokemonStats pokemonStats = new PokemonStats(name, baseStat);
             statsList.add(pokemonStats);
         });
+
         return statsList;
     }
 

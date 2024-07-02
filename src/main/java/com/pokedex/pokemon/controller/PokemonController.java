@@ -2,7 +2,10 @@ package com.pokedex.pokemon.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.pokedex.pokemon.api.PokemonData;
+import com.pokedex.pokemon.domain.dto.PokemonDTO;
 import com.pokedex.pokemon.domain.entities.Pokemon;
+import com.pokedex.pokemon.domain.service.PokedexService;
+import com.pokedex.pokemon.domain.service.custom.PokemonService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,19 +18,15 @@ public class PokemonController {
 
     private static final String ID_PATH_VARIABLE = "/{id}";
 
-//    @Autowired
-//    private PokemonService service;
-
+    //    @Autowired
+//    private PokedexService service;
     @Autowired
-    private PokemonData pokemonDataService;
+    private PokemonService service;
 
     @GetMapping
-    public ResponseEntity<List<Pokemon>> getPokemonData() throws JsonProcessingException, InterruptedException {
-        return ResponseEntity.ok(pokemonDataService.fetchPokemonData());
+    public ResponseEntity<List<PokemonDTO>> findAll() {
+        return ResponseEntity.ok(service.findAll());
     }
-
-    // - post
-    //insert
 
     // - get
     //types by dex

@@ -10,7 +10,10 @@ import com.pokedex.pokemon.domain.repository.custom.PokemonMovesRepository;
 import com.pokedex.pokemon.domain.repository.custom.PokemonRepository;
 import com.pokedex.pokemon.domain.repository.custom.PokemonStatsRepository;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -28,7 +31,7 @@ import java.util.stream.StreamSupport;
 
 @Service
 @RequiredArgsConstructor
-public class PokemonData {
+public class PokemonData implements CommandLineRunner {
 
     @Autowired
     private RestTemplate restTemplate;
@@ -43,8 +46,20 @@ public class PokemonData {
     private PokemonRepository pokemonRepository;
 
     private final ExecutorService executorService = Executors.newFixedThreadPool(10);
+    private static final Logger logger = LoggerFactory.getLogger(PokemonData.class);
 
-    public List<Pokemon> fetchPokemonData() throws JsonProcessingException, InterruptedException {
+    @Override
+    public void run(String... args) throws Exception {
+        logger.info("Starting to fetch Pokemon data...");
+        try {
+            List<Pokemon> pokemons = fetchPokemonData();
+            logger.info("Fetched and saved {} Pokemons", pokemons.size());
+        } catch (Exception e) {
+            logger.error("Error fetching Pokemon data ", e);
+        }
+    }
+
+    private List<Pokemon> fetchPokemonData() throws JsonProcessingException, InterruptedException {
         String url = "https://pokeapi.co/api/v2/pokemon?limit=151";
         JsonNode rootNode = getJsonNode(url);
         JsonNode resultsNode = rootNode.path("results");
@@ -138,4 +153,5 @@ public class PokemonData {
                 .map(node -> node.path("type").path("name").asText())
                 .collect(Collectors.joining(", "));
     }
+
 }

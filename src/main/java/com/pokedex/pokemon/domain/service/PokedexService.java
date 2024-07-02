@@ -1,14 +1,14 @@
 package com.pokedex.pokemon.domain.service;
 
-import com.pokedex.pokemon.domain.repository.CRUDRepository;
+import com.pokedex.pokemon.domain.repository.PokedexRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public abstract class CRUDService<Entity, ID, DTO> {
+public abstract class PokedexService<Entity, ID, DTO> {
 
     @Autowired
-    private CRUDRepository<Entity, ID> repository;
+    private PokedexRepository<Entity, ID> repository;
 
 
 }

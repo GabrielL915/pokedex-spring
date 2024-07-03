@@ -17,6 +17,14 @@ public abstract class PokedexService<Entity, ID, DTO> {
     private PokedexMapper<Entity, DTO> mapper;
 
     public List<DTO> findAll() {
-        return repository.findAll().stream().map(mapper::toDTO).toList();
+        return repository.findAll().stream().map(this::getDTOFromEntity).toList();
+    }
+
+    public DTO findById(ID id) {
+        return getDTOFromEntity(repository.findById(id).orElseThrow());
+    }
+
+    private DTO getDTOFromEntity(Entity entity) {
+        return mapper.toDTO(entity);
     }
 }

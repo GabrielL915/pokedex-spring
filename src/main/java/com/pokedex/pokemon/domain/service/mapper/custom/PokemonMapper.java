@@ -26,7 +26,7 @@ public class PokemonMapper implements PokedexMapper<Pokemon, PokemonDTO> {
     public Pokemon toEntity(PokemonDTO pokemonDTO) {
         return new Pokemon(pokemonDTO.getPokedexNumber(), pokemonDTO.getName(),
                 pokemonDTO.getType(), pokemonDTO.getHeight(), pokemonDTO.getWeight(),
-                pokemonDTO.getMovesDTOS().stream().map(pokemonMovesMapper::toEntity).toList(),
-                pokemonDTO.getStatsDTOS().stream().map(pokemonStatsMapper::toEntity).toList());
+                pokemonDTO.getMoves().stream().map(pokemonMovesMapper::toEntity).toList(),
+                pokemonDTO.getStats().stream().map(pokemonStatsMapper::toEntity).toList());
     }
 }

@@ -1,6 +1,5 @@
 package com.pokedex.pokemon.domain.dto;
 
-import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
@@ -10,7 +9,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.validator.constraints.UniqueElements;
 
 import java.util.List;
 
@@ -40,9 +38,9 @@ public class PokemonDTO {
 
     @NotEmpty(message = "Pokemon moves must not be empty")
     @Size(min = 4, message = "Must have at least four moves")
-    private List<PokemonMovesDTO> movesDTOS;
+    private List<PokemonMovesDTO> moves;
 
     @NotEmpty(message = "Pokemon stats must not be empty")
     @Size(min = 1, message = "Must have at least a stat")
-    private List<PokemonStatsDTO> statsDTOS;
+    private List<PokemonStatsDTO> stats;
 }

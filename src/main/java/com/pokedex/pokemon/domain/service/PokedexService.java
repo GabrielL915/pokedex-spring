@@ -1,6 +1,7 @@
 package com.pokedex.pokemon.domain.service;
 
 import com.pokedex.pokemon.domain.repository.PokedexRepository;
+import com.pokedex.pokemon.domain.service.exceptions.EntityNotFoundException;
 import com.pokedex.pokemon.domain.service.mapper.PokedexMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,7 +22,7 @@ public abstract class PokedexService<Entity, ID, DTO> {
     }
 
     public DTO findById(ID id) {
-        return getDTOFromEntity(repository.findById(id).orElseThrow());
+        return getDTOFromEntity(repository.findById(id).orElseThrow(() -> new EntityNotFoundException(id)));
     }
 
     private DTO getDTOFromEntity(Entity entity) {

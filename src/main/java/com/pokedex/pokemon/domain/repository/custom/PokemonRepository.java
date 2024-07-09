@@ -1,7 +1,6 @@
 package com.pokedex.pokemon.domain.repository.custom;
 
 import com.pokedex.pokemon.domain.entities.Pokemon;
-import com.pokedex.pokemon.domain.projection.PokemonTypeProjection;
 import com.pokedex.pokemon.domain.repository.PokedexRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;

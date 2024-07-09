@@ -4,6 +4,7 @@ import com.pokedex.pokemon.domain.dto.PokemonDTO;
 import com.pokedex.pokemon.domain.entities.Pokemon;
 import com.pokedex.pokemon.domain.repository.custom.PokemonRepository;
 import com.pokedex.pokemon.domain.service.PokedexService;
+import com.pokedex.pokemon.domain.service.exceptions.EntityNotFoundException;
 import com.pokedex.pokemon.domain.service.mapper.custom.PokemonMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +26,7 @@ public class PokemonService extends PokedexService<Pokemon, String, PokemonDTO> 
     private PokemonMapper pokemonMapper;
 
     public PokemonDTO findByName(String name) {
-        var pokemon = pokemonRepository.findByName(name).orElseThrow();
+        var pokemon = pokemonRepository.findByName(name).orElseThrow(() -> new EntityNotFoundException(name));
         return pokemonMapper.toDTO(pokemon);
     }
 
@@ -45,7 +46,7 @@ public class PokemonService extends PokedexService<Pokemon, String, PokemonDTO> 
         Optional<String> optionalTypes = pokemonRepository.findTypeByPokedexNumber(pokedexNumber);
 
         if (optionalTypes.isEmpty()) {
-            throw new RuntimeException("Not found");
+            throw new EntityNotFoundException(pokedexNumber);
         }
         String types = optionalTypes.get();
         return Map.of("type", types);

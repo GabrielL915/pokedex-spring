@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -38,5 +39,15 @@ public class PokemonService extends PokedexService<Pokemon, String, PokemonDTO> 
         return pokemonRepository.findAllByOrderByType().stream()
                 .map(pokemonMapper::toDTO)
                 .collect(Collectors.groupingBy(PokemonDTO::getType));
+    }
+
+    public Map<String, String> findTypeByPokedexNumber(Long pokedexNumber) {
+        Optional<String> optionalTypes = pokemonRepository.findTypeByPokedexNumber(pokedexNumber);
+
+        if (optionalTypes.isEmpty()) {
+            throw new RuntimeException("Not found");
+        }
+        String types = optionalTypes.get();
+        return Map.of("type", types);
     }
 }

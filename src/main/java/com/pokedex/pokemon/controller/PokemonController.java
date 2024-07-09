@@ -30,10 +30,13 @@ public class PokemonController extends PokedexController<Pokemon, String, Pokemo
         return ResponseEntity.ok(pokemonService.findAllByOrderByPokedexNumber());
     }
 
-    @GetMapping(path = "types")
+    @GetMapping(path = "/types")
     ResponseEntity<Map<String, List<PokemonDTO>>> findAllByOrderByType() {
         return ResponseEntity.ok(pokemonService.findAllByOrderByType());
     }
-//one
-    //types by dex
+
+    @GetMapping(path = "/types/{pokedexNumber}")
+    ResponseEntity<Map<String, String>> findTypeByPokedexNumber(@PathVariable Long pokedexNumber) {
+        return ResponseEntity.ok(pokemonService.findTypeByPokedexNumber(pokedexNumber));
+    }
 }

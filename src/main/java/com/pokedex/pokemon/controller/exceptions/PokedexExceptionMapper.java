@@ -1,5 +1,6 @@
 package com.pokedex.pokemon.controller.exceptions;
 
+import com.pokedex.pokemon.api.exceptions.PokemonDataFetchException;
 import com.pokedex.pokemon.domain.service.exceptions.EntityNotFoundException;
 import com.pokedex.pokemon.shared.exception.PokedexStandardExeption;
 import com.pokedex.pokemon.shared.utils.ErrorResponse;
@@ -20,6 +21,13 @@ public class PokedexExceptionMapper {
     @ResponseBody
     public ErrorResponse mapPokedexStandardExceptionWithNotFound(PokedexStandardExeption exeption) {
         return buildErrorResponse(HttpStatus.NOT_FOUND, exeption);
+    }
+
+    @ExceptionHandler(PokemonDataFetchException.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    @ResponseBody
+    public ErrorResponse mapPokedexStandardExceptionWithDataFetch(PokemonDataFetchException exception) {
+        return buildErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, exception);
     }
 
     private ErrorResponse buildErrorResponse(HttpStatus httpStatus, PokedexStandardExeption exception) {

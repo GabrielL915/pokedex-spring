@@ -3,6 +3,7 @@ package com.pokedex.pokemon.api;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.pokedex.pokemon.api.exceptions.PokemonDataFetchException;
 import com.pokedex.pokemon.domain.entities.Pokemon;
 import com.pokedex.pokemon.domain.entities.PokemonMoves;
 import com.pokedex.pokemon.domain.entities.PokemonStats;
@@ -54,7 +55,7 @@ public class PokemonData implements CommandLineRunner {
         try {
             List<Pokemon> pokemons = fetchPokemonData();
             logger.info("Fetched and saved {} Pokemons", pokemons.size());
-        } catch (Exception e) {
+        } catch (PokemonDataFetchException e) {
             logger.error("Error fetching Pokemon data ", e);
         }
     }

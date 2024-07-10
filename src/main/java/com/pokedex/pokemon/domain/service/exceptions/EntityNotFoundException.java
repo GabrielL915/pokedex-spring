@@ -1,5 +1,7 @@
 package com.pokedex.pokemon.domain.service.exceptions;
 
+import com.pokedex.pokemon.shared.exception.PokedexStandardExeption;
+
 public class EntityNotFoundException extends PokedexStandardExeption {
 
     private static final String DEFAULT_MESSAGE = "Unable to find entity.";

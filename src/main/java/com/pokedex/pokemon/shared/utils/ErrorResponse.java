@@ -1,4 +1,4 @@
-package com.pokedex.pokemon.utils;
+package com.pokedex.pokemon.shared.utils;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
@@ -19,6 +19,7 @@ import java.util.List;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class ErrorResponse {
 
+    private String title;
     private String code;
     private String message;
     private String details;

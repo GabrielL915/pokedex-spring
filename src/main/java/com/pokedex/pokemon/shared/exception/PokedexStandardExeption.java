@@ -1,4 +1,4 @@
-package com.pokedex.pokemon.domain.service.exceptions;
+package com.pokedex.pokemon.shared.exception;
 
 import org.apache.commons.lang3.StringUtils;
 
